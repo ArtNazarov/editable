@@ -38,13 +38,16 @@
         case 'textarea' : {$(e).before("<textarea cols='80' rows='20' id='ed"+i+"' data-ent='"+i+"' class='edit'>"+$(e).text()+"</textarea>"); break;};
 
       };
+      $(e).before().after(`&nbsp;<a id='sv${i}' href='#' class='saveEdit'>save</a>`);
+      $(e).before().after(`&nbsp;<a id='hd${i}' href='#' class='hideEdit'>close</a>`);
       
    });
    $(".edit").hide();
+   $(".hideEdit").hide();
+   $('.saveEdit').hide();
  };
- var trackChanges = () => {
- $('.edit').each( (i,e)=>{
-     $(e).change( ()=> {
+ 
+ var save = (e)=>{
    console.log('change!');
    var edId = $(e).attr('id');
    console.log(edId);
@@ -54,7 +57,16 @@
    console.log(v);
    Store[ent]=$(e).val();
    console.log(Store);
-   $(e).hide(); $('.editable').show();
+   $(e).hide();
+   $('.hideEdit').hide();
+   $('.saveEdit').hide();   
+   $('.editable').show();
+ }
+ 
+ var trackChanges = () => {
+ $('.edit').each( (i,e)=>{
+     $(e).change( ()=> {
+   save(e);
    refresh();
  });
   } );
@@ -65,9 +77,13 @@
      {
         $(e).dblclick( ()=> { 
             $(e).toggle(); 
+            $('#hd'+$(e).data('ent')).toggle();
             $('#ed'+$(e).data('ent')).toggle(); 
+            $('#sv'+$(e).data('ent')).toggle();
             });
      });
+    $('.hideEdit').click( ()=> { $('.edit').hide(); $('.hideEdit').hide(); $('.saveEdit').hide();   $('.editable').show(); } );
+    $('.saveEdit').each( (i,e)=>{ $(e).click( ()=>{save(e);} ) } );
   };
  
  
