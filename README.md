@@ -1,6 +1,8 @@
 # editable
 
 Demonstrates how to create in-place content editor
+Changes saving into browser localStorage
+Uses SummerCode as Wysywig editor
 
 Video
 
