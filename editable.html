@@ -95,7 +95,9 @@
    localStorage.setItem('Store', JSON.stringify(Store));
    console.log(localStorage);
    console.log(Store);
-   $('.note-editor').remove();
+    if ($(editorId).prop('tagName').toLowerCase()=='textarea'){
+   $(editorId).summernote('destroy');
+   };
    $(editorId).fadeOut(350);
    $('.hideEdit').hide();
    $('.saveEdit').hide();   
@@ -128,7 +130,17 @@
             };
             });
      });
-    $('.hideEdit').click( ()=> { $('.edit').hide(); $('.hideEdit').hide(); $('.saveEdit').hide();   $('.editable').show(); } );
+    $('.hideEdit').each( (i,e)=>{ $(e).click( ()=> { 
+      var ent = $(e).data('ent');
+      $('#hd'+ent).hide(); 
+      $('#sv'+ent).hide();   
+      $('.editable').show(); 
+      var editorId = '#ed'+$(e).data('ent');
+       if ($(editorId).prop('tagName').toLowerCase()=='textarea'){
+          $(editorId).summernote('destroy');
+          $(editorId).fadeOut(350);
+       };
+      } ) } );
     $('.saveEdit').each( (i,e)=>{ $(e).click( ()=>{save(e);} ) } );
   };
  
