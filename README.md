@@ -6,4 +6,4 @@ Uses SummerCode as Wysywig editor
 
 Video
 
-[![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/z55KRXnzJIw/0.jpg)](https://www.youtube.com/watch?v=z55KRXnzJIw)
+[![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/soKfFRefbFY/0.jpg)](https://www.youtube.com/watch?v=soKfFRefbFY)
