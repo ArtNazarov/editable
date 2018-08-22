@@ -4,19 +4,20 @@
 <meta charset="utf8">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css">
     <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.9/summernote-bs4.css" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.9/summernote-bs4.js"></script>
 <style>
-.editable{border:thin dashed #ffff00;}
+.editable{border:thin dashed #ffff00; width:auto}
 #otherControls{background:#cccccc;display:block;width:100%;position:fixed;bottom:0;left:0;padding:10px;height:64px;}
 </style>
 </head>
 <body>
- <h1 class="editable" data-ent="0" data-edit="input"></h1>
- <p class="editable" data-ent="1" data-edit="textarea"></p>
- <div id="otherControls" style='display:none'><label for="pass">Пароль для правки</label><input type="text" name="pass" id="pass"/><button id="applyPass">Применить пароль</button></div>
+ <h1 class="editable" id="area0" data-ent="0" data-edit="input"></h1>
+ <p class="editable" id="area1" data-ent="1" data-edit="textarea"></p>
+ <div id="otherControls" style='display:none'><label for="pass">Пароль для правки</label><input type="password" name="pass" id="pass"/><button id="applyPass">Применить пароль</button></div>
  
  
  
@@ -76,13 +77,14 @@
  };
  
  var save = (e)=>{
- if (pass=='mypass'){
+ 
    console.log('change!');
    var edId = $(e).attr('id');
    console.log('e id=',edId);
    var ent = $(e).data('ent');
    console.log('ent=',ent);
    var editorId = '#ed'+ent;
+  if (pass=='mypass'){ 
    if ($(editorId).prop('tagName').toLowerCase()=='textarea'){
      console.log('textarea saving');
      var htmlCode = $(editorId).summernote('code');
@@ -91,19 +93,20 @@
    } else {
    Store[ent]=$(editorId).val();
    };
+   
    // I will save in localStorage
    localStorage.setItem('Store', JSON.stringify(Store));
+   }
    console.log(localStorage);
    console.log(Store);
     if ($(editorId).prop('tagName').toLowerCase()=='textarea'){
    $(editorId).summernote('destroy');
    };
    $(editorId).fadeOut(350);
-   $('.hideEdit').hide();
-   $('.saveEdit').hide();   
-   $('.editable').show();
+   $('#hd'+ent).hide('explode');
+   $('#sv'+ent).hide('explode');   
+   $('#area'+ent).fadeIn(350);
    refresh();
-   }
  }
  
  var trackChanges = () => {
@@ -119,10 +122,10 @@
    $('.editable').each( (i,e)=>
      {
         $(e).dblclick( ()=> { 
-            $(e).toggle(); 
-            $('#hd'+$(e).data('ent')).toggle();
-            $('#ed'+$(e).data('ent')).toggle(); 
-            $('#sv'+$(e).data('ent')).toggle();
+            $(e).hide(); 
+            $('#hd'+$(e).data('ent')).show();
+            $('#ed'+$(e).data('ent')).show(); 
+            $('#sv'+$(e).data('ent')).show();
             console.log($('#ed'+$(e).data('ent')).prop('tagName'));
             if ($('#ed'+$(e).data('ent')).prop('tagName').toLowerCase()=='textarea'){
             console.log('Вставляем summernote');
@@ -132,14 +135,14 @@
      });
     $('.hideEdit').each( (i,e)=>{ $(e).click( ()=> { 
       var ent = $(e).data('ent');
-      $('#hd'+ent).hide(); 
-      $('#sv'+ent).hide();   
-      $('.editable').show(); 
+      $('#hd'+ent).hide('explode'); 
+      $('#sv'+ent).hide('explode');   
+      $('.editable').fadeIn(350); 
       var editorId = '#ed'+$(e).data('ent');
        if ($(editorId).prop('tagName').toLowerCase()=='textarea'){
           $(editorId).summernote('destroy');
+        };
           $(editorId).fadeOut(350);
-       };
       } ) } );
     $('.saveEdit').each( (i,e)=>{ $(e).click( ()=>{save(e);} ) } );
   };
@@ -150,6 +153,7 @@
       pass = $('#pass').val();
     });
   };
+  
  
    loadStore();
    if ($.urlParam('e')=='on'){
